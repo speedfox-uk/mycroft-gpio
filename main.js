@@ -2,11 +2,15 @@ var WebSocketClient = require('websocket').client;
 var Gpio = require('onoff').Gpio;
 var client = new WebSocketClient();
 var amp = new Gpio(13,'out');
+var speak = new Gpio(12, 'out');
 
 var speaking = false;
 var playing = false;
 var detecting = false;
 var detectingTimeout = 0;
+
+speak.writeSync(1);
+updateAmp();
 
 function updateAmp(){
 
@@ -30,6 +34,12 @@ function handleMessage(message){
     var type =  JSON.parse(message['utf8Data']).type;
     console.log("Got message type "+type);
     switch(type){
+        case "recognizer_loop:record_begin":
+            speak.writeSync(0);
+            break;
+        case "recognizer_loop:record_end":
+            speak.writeSync(1);
+            break;
         case "mycroft.audio.service.play":
             playing = true;
             break;

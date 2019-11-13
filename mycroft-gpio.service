@@ -1,0 +1,11 @@
+[Unit]
+Description=Mycroft GPIO
+
+[Service]
+User=root
+Type=simple
+WorkingDirectory=/opt/mycroft-gpio/
+ExecStart=/usr/bin/node /opt/mycroft-gpio/main.js
+
+[Install]
+WantedBy=multi-user.target
